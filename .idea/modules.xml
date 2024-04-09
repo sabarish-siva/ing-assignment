@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/order-processor/ordercommon.iml" filepath="$PROJECT_DIR$/order-processor/ordercommon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ordertest/orderprocessor.iml" filepath="$PROJECT_DIR$/ordertest/orderprocessor.iml" />
+    </modules>
+  </component>
+</project>
