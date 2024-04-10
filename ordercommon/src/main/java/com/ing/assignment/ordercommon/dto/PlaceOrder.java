@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+/**
+ * Incoming and outgoing dto for the process order topics.
+ */
 @Data
 @NoArgsConstructor
 public class PlaceOrder {

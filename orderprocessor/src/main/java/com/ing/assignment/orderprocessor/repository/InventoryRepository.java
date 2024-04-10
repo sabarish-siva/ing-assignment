@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+/**
+ * Repository for {@link InventoryDetail} entity
+ */
 @Repository
 public interface InventoryRepository extends JpaRepository<InventoryDetail, UUID> {
     InventoryDetail findOneByType(VehicleType vehicleType);

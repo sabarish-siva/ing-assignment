@@ -4,6 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
+/**
+ * This is an abstract child to the {@link AbstractKafkaConsumer}. This is a continuous background task
+ * which utilises the {@link Scheduled} spring annotation. The {@link #processMessages()} method will be called at
+ * specific intervals. Child classes needs to provide implementation for {@link #getTaskName()}  and
+ * {@link #processMessages()} functions from this class and for {@link #getTopicName()} from the parent abstract class.
+ **/
 @Slf4j
 public abstract class AbstractScheduledKafkaConsumer<T> extends AbstractKafkaConsumer<T> {
 

@@ -6,6 +6,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * Producer class for the kafka topic <b>car-order-feedback-topic</b>. Extends the basic
+ * {@link AbstractKafkaProducer} class to send records. {@link KafkaTemplate} bean can be
+ * found at {@link com.ing.assignment.orderprocessor.config.KafkaConfig} file. Initialised
+ * and used in the {@link com.ing.assignment.orderprocessor.engine.CarOrderProcessorEngine}
+ * to send feedback to {@link com.ing.assignment.ordermanager} service
+ * via the kafka topic mentioned.
+ */
 @Component
 public class CarOrderFeedbackProducer extends AbstractKafkaProducer<OrderFeedback> {
 

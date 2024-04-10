@@ -12,6 +12,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+/**
+ * Consumer class for the kafka topic <b>car-orders-feedback-topic</b>. Extends the
+ * {@link AbstractScheduledKafkaConsumer} to fetch periodically from the topic and
+ * update the database the current status {@link com.ing.assignment.ordercommon.model.OrderStatus} of the order (PROCESSING, FINISHED).
+ * Supplies the parent with {@link ConsumerFactory} object. {@link org.springframework.context.annotation.Bean}
+ * for carFBConsumerFactory can be found at {@link com.ing.assignment.ordermanager.config.KafkaConfig} file.
+ */
 @Component
 public class CarOrderFBConsumer extends AbstractScheduledKafkaConsumer<Object> {
 

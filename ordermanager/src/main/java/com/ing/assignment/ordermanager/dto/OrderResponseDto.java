@@ -8,6 +8,9 @@ import lombok.Data;
 
 import java.util.UUID;
 
+/**
+ * Outgoing dto for {@link OrderDetail} entity.
+ */
 @Data
 public class OrderResponseDto {
     private UUID orderId;

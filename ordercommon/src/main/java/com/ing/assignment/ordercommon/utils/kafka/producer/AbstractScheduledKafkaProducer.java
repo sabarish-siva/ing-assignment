@@ -4,6 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.util.List;
+
+/**
+ * This is an abstract scheduler class extending the {@link AbstractKafkaProducer} class. Implement the
+ * {@link #executeTask()} method which will be called at specific delays. Supply with the {@link KafkaTemplate},
+ * {@link #getTopicName()} and {@link #getTaskName()}. Utilise the {@link #sendMessage(Object)} or
+ * {@link #sendMessages(List)} method from parent inside {@link #executeTask()} function to send periodic records to kafka.
+ */
 @Slf4j
 public abstract class AbstractScheduledKafkaProducer<T> extends AbstractKafkaProducer<T> {
 

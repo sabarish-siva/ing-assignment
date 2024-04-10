@@ -11,6 +11,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Entity class for OrderDetail. Linked to orders table in the db.
+ */
 @Entity
 @Table(name = "orders")
 @Data

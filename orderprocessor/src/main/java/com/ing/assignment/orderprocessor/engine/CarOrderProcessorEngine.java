@@ -10,12 +10,20 @@ import com.ing.assignment.orderprocessor.repository.InventoryRepository;
 import com.ing.assignment.orderprocessor.utils.CarOrderFeedbackProducer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+/**
+ * Core class to process car orders. Extends the {@link AbstractScheduledKafkaConsumer} to fetch
+ * periodically from the <b>process-car-orders-topic</b> kafka topic. Processes the orders and commits
+ * if there is enough inventory. Sends initial feedback at the start of processing and final feedback
+ * after finishing the order processing to the kafka topic <b>car-order-feedback-topic</b>.
+ * {@link ConsumerFactory} bean can be found at {@link com.ing.assignment.orderprocessor.config.KafkaConfig} file.
+ */
 @Component
 public class CarOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Object> {
 
@@ -63,12 +71,20 @@ public class CarOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Obje
             carOrderFeedbackProducer.sendFeedback(feedback);
 
             commitOffsets();
+        } else {
+            /*for some reason, the polling doesn't continue to fetch from same offset even
+            though the auto commit is off and we dont manually commit if inventory check fails.
+            A server restart however makes the consumption from stopped offset. So I persume there
+            is some kind of soft commit or something of that sort (which I dont know for sure).
+            Hence, using a workaround for now to maintain offset when the record is not processed.
+             */
+            kafkaConsumer.seek(new TopicPartition(record.topic(),record.partition()),record.offset());
         }
     }
 
     private boolean inventoryAvailable(Integer required) {
         InventoryDetail inventoryDetail = inventoryRepository.findOneByType(VehicleType.CAR);
-        return inventoryDetail.getQuantity() >= required;
+        return inventoryDetail != null && inventoryDetail.getQuantity() >= required;
     }
 
     private void processOrder(PlaceOrder order) {

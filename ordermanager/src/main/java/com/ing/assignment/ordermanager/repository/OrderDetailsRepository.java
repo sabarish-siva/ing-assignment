@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Repository for {@link OrderDetail} entity
+ */
 @Repository
 public interface OrderDetailsRepository extends JpaRepository<OrderDetail, UUID> {
     List<OrderDetail> findByIsProcessedAndType(boolean isProcessed, VehicleType type);

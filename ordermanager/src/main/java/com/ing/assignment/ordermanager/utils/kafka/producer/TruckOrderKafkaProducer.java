@@ -13,6 +13,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Producer class for the kafka topic <b>process-truck-orders-topic</b>. Extends the
+ * {@link AbstractScheduledKafkaProducer} to periodically fetch the
+ * {@link com.ing.assignment.ordercommon.model.OrderStatus}.ACCEPTED truck
+ * orders from the DB and publishes it to the kafka topic. {@link KafkaTemplate}
+ * config is located at the {@link com.ing.assignment.ordermanager.config.KafkaConfig} file.
+ */
 @Component
 @Slf4j
 public class TruckOrderKafkaProducer extends AbstractScheduledKafkaProducer<PlaceOrder> {

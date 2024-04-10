@@ -16,6 +16,10 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Configuration class for kafka. Contains {@link Bean}s required for the producers and consumers with
+ * the necessary config values. Takes care of creating topics for process orders workflow.
+ */
 @Configuration
 public class KafkaConfig {
 

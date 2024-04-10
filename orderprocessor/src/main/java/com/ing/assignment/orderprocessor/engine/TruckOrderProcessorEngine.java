@@ -10,12 +10,20 @@ import com.ing.assignment.orderprocessor.repository.InventoryRepository;
 import com.ing.assignment.orderprocessor.utils.TruckOrderFeedbackProducer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+/**
+ * Core class to process truck orders. Extends the {@link AbstractScheduledKafkaConsumer} to fetch
+ * periodically from the <b>process-truck-orders-topic</b> kafka topic. Processes the orders and commits
+ * if there is enough inventory. Sends initial feedback at the start of processing and final feedback
+ * after finishing the order processing to the kafka topic <b>truck-order-feedback-topic</b>.
+ * {@link ConsumerFactory} bean can be found at {@link com.ing.assignment.orderprocessor.config.KafkaConfig} file.
+ */
 @Component
 public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Object> {
 
@@ -63,6 +71,8 @@ public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Ob
             truckOrderFeedbackProducer.sendFeedback(feedback);
 
             commitOffsets();
+        } else {
+            kafkaConsumer.seek(new TopicPartition(record.topic(),record.partition()),record.offset());
         }
     }
 

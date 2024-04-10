@@ -13,6 +13,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Service layer for the {@link com.ing.assignment.ordermanager.controller.OrderController}.
+ * Connects to the {@link OrderDetailsRepository} and returns {@link OrderResponseDto} objects.
+ */
 @Service
 public class OrderService {
 

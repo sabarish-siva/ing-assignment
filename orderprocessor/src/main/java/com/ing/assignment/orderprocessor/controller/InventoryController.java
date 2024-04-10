@@ -9,6 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Client HTTP entry point for the {@link com.ing.assignment.orderprocessor.OrderProcessorApplication}
+ * application. Serves <b>/inventory</b> rest endpoints for the following
+ * functionalities-
+ *<p>-get all inventory details</p>
+ *<p>-UPSERT records to inventory</p>
+ */
 @RestController
 @RequestMapping("/inventory")
 public class InventoryController {
@@ -22,7 +29,7 @@ public class InventoryController {
     }
 
     @PostMapping
-    public ResponseEntity<InventoryDetail> createOrder(@RequestBody InventoryDetail inventoryDetail) {
+    public ResponseEntity<InventoryDetail> upsertInventory(@RequestBody InventoryDetail inventoryDetail) {
         try {
             InventoryDetail response = inventoryService.upsert(inventoryDetail);
             return new ResponseEntity<>(response, HttpStatus.OK);

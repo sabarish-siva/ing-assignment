@@ -27,9 +27,7 @@ delete from inventory]]></console>
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="39326d1d-1375-4769-b8cd-6b66f2af5918" object-ref="consoles/Connection" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="39326d1d-1375-4769-b8cd-6b66f2af5918" />

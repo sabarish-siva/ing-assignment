@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.UUID;
 
+/**
+ * Incoming and outgoing dto for the Feedback topics.
+ */
 @Data
 public class OrderFeedback {
     private UUID orderId;

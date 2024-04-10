@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Simple service layer for the {@link com.ing.assignment.orderprocessor.controller.InventoryController} endpoints
+ */
 @Service
 public class InventoryService {
 

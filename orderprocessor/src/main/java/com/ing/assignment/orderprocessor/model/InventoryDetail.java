@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+/**
+ * Entity class for InventoryDetail. Linked to inventory table in the db.
+ */
 @Entity
 @Table(name = "inventory")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class InventoryDetail {
     @Id
     @GeneratedValue
