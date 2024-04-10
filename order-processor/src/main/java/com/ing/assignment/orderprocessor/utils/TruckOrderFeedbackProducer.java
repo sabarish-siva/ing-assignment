@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TruckOrderFeedbackProducer extends AbstractKafkaProducer<OrderFeedback> {
 
-    @Value("${kafka.topic.truck-order-feedback}")
+    @Value("${spring.kafka.topic.truck-order-feedback}")
     private String truckOrderFeedbackTopic;
 
     public TruckOrderFeedbackProducer(KafkaTemplate<String, OrderFeedback> kafkaTemplate) {

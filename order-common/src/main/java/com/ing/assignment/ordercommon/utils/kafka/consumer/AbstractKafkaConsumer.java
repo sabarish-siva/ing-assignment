@@ -6,7 +6,6 @@ import org.springframework.kafka.core.ConsumerFactory;
 
 import java.time.Duration;
 import java.util.Collections;
-import java.util.Optional;
 
 public abstract class AbstractKafkaConsumer<T> {
 
@@ -20,8 +19,8 @@ public abstract class AbstractKafkaConsumer<T> {
 
     protected abstract String getTopicName();
 
-    protected ConsumerRecords<String, T> pollRecords(Optional<Integer> pollTime) {
-        return kafkaConsumer.poll(Duration.ofMillis(pollTime.orElse(DEFAULT_POLL_TIME)));
+    protected ConsumerRecords<String, T> pollRecords() {
+        return kafkaConsumer.poll(Duration.ofMillis(DEFAULT_POLL_TIME));
     }
 
     protected void commitOffsets() {

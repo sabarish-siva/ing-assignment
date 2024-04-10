@@ -22,22 +22,22 @@ import java.util.UUID;
 @EnableKafka
 public class KafkaConfig {
 
-    @Value("${kafka.bootstrap-servers}")
+    @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${kafka.max-poll-records}")
+    @Value("${spring.kafka.max-poll-records}")
     private String maxPollRecords;
 
-    @Value("${kafka.consumer.car-orders.group-id}")
+    @Value("${spring.kafka.consumer.car-orders.group-id}")
     private String carGroupId;
 
-    @Value("${kafka.consumer.truck-orders.group-id}")
+    @Value("${spring.kafka.consumer.truck-orders.group-id}")
     private String truckGroupId;
 
-    @Value("${kafka.topic.car-order-feedback}")
+    @Value("${spring.kafka.topic.car-order-feedback}")
     private String carOrderFeedbackTopic;
 
-    @Value("${kafka.topic.truck-order-feedback}")
+    @Value("${spring.kafka.topic.truck-order-feedback}")
     private String truckOrderFeedbackTopic;
 
     private static final short DEFAULT_REPLICATION_FACTOR = 1;

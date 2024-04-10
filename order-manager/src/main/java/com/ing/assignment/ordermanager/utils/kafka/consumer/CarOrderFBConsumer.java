@@ -7,7 +7,6 @@ import com.ing.assignment.ordermanager.repository.OrderDetailsRepository;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +14,6 @@ import java.util.Optional;
 
 @Component
 public class CarOrderFBConsumer extends AbstractScheduledKafkaConsumer<Object> {
-
-    @Value("${kafka.topic.car-order-feedback}")
-    private String carOrderFeedbackTopic;
 
     private final OrderDetailsRepository orderDetailsRepository;
 
@@ -39,7 +35,7 @@ public class CarOrderFBConsumer extends AbstractScheduledKafkaConsumer<Object> {
 
     @Override
     protected void processMessages() {
-        ConsumerRecords<String, Object> records = pollRecords(Optional.empty());
+        ConsumerRecords<String, Object> records = pollRecords();
         for (ConsumerRecord<String, Object> record : records) {
             processRecord(record);
         }
@@ -53,7 +49,6 @@ public class CarOrderFBConsumer extends AbstractScheduledKafkaConsumer<Object> {
     }
 
     private void processOrder(OrderFeedback feedback) {
-        // Implement additional processing logic here
         Optional<OrderDetail> optionalOrder = orderDetailsRepository.findById(feedback.getOrderId());
         if(optionalOrder.isPresent()) {
             OrderDetail orderDetail = optionalOrder.get();

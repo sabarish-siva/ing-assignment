@@ -1,12 +1,16 @@
 package com.ing.assignment.ordercommon.dto;
 
-import com.ing.assignment.ordercommon.model.OrderStatus;
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public class OrderFeedback {
+public class PlaceOrder {
     private UUID orderId;
-    private OrderStatus status;
+    private Integer quantity;
+
+    public PlaceOrder(UUID id, Integer quantity) {
+        this.orderId = id;
+        this.quantity = quantity;
+    }
 }

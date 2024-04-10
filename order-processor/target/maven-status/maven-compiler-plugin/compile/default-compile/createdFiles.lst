@@ -2,5 +2,7 @@ com\ing\assignment\orderprocessor\engine\TruckOrderProcessorEngine.class
 com\ing\assignment\orderprocessor\utils\CarOrderFeedbackProducer.class
 com\ing\assignment\orderprocessor\utils\TruckOrderFeedbackProducer.class
 com\ing\assignment\orderprocessor\config\KafkaConfig.class
+com\ing\assignment\orderprocessor\repository\InventoryRepository.class
+com\ing\assignment\orderprocessor\model\Inventory.class
 com\ing\assignment\orderprocessor\engine\CarOrderProcessorEngine.class
 com\ing\assignment\orderprocessor\OrderProcessorApplication.class

@@ -7,39 +7,35 @@ import com.ing.assignment.ordermanager.repository.OrderDetailsRepository;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class CarOrderFBConsumer extends AbstractScheduledKafkaConsumer<Object> {
-
-    @Value("${kafka.topic.car-order-feedback}")
-    private String carOrderFeedbackTopic;
+public class TruckOrderFBConsumer extends AbstractScheduledKafkaConsumer<Object> {
 
     private final OrderDetailsRepository orderDetailsRepository;
 
-    public CarOrderFBConsumer(@Qualifier("carFBConsumerFactory") ConsumerFactory<String, Object> consumerFactory,
-                              OrderDetailsRepository orderDetailsRepository) {
+    public TruckOrderFBConsumer(@Qualifier("truckFBConsumerFactory") ConsumerFactory<String, Object> consumerFactory,
+                                OrderDetailsRepository orderDetailsRepository) {
         super(consumerFactory);
         this.orderDetailsRepository = orderDetailsRepository;
     }
 
     @Override
     protected String getTaskName() {
-        return "Processing Car Feedback messages";
+        return "Processing Truck Feedback messages";
     }
 
     @Override
     protected String getTopicName() {
-        return "car-orders-feedback-topic";
+        return "truck-orders-feedback-topic";
     }
 
     @Override
     protected void processMessages() {
-        ConsumerRecords<String, Object> records = pollRecords(Optional.empty());
+        ConsumerRecords<String, Object> records = pollRecords();
         for (ConsumerRecord<String, Object> record : records) {
             processRecord(record);
         }

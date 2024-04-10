@@ -1,31 +1,33 @@
 package com.ing.assignment.orderprocessor.engine;
 
 import com.ing.assignment.ordercommon.dto.OrderFeedback;
+import com.ing.assignment.ordercommon.dto.PlaceOrder;
 import com.ing.assignment.ordercommon.model.OrderStatus;
+import com.ing.assignment.ordercommon.model.VehicleType;
 import com.ing.assignment.ordercommon.utils.kafka.consumer.AbstractScheduledKafkaConsumer;
+import com.ing.assignment.orderprocessor.model.Inventory;
+import com.ing.assignment.orderprocessor.repository.InventoryRepository;
 import com.ing.assignment.orderprocessor.utils.TruckOrderFeedbackProducer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.Random;
 
 @Component
-public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<UUID> {
-
-    @Value("${kafka.topic.process-truck-orders}")
-    private String truckOrderProcessTopic;
+public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Object> {
 
     private final TruckOrderFeedbackProducer truckOrderFeedbackProducer;
+    private final InventoryRepository inventoryRepository;
+    private static final Random RANDOM = new Random();
 
-    public TruckOrderProcessorEngine(@Qualifier("truckConsumerFactory") ConsumerFactory<String, UUID> consumerFactory,
-                                     TruckOrderFeedbackProducer truckOrderFeedbackProducer) {
+    public TruckOrderProcessorEngine(@Qualifier("truckConsumerFactory") ConsumerFactory<String, Object> consumerFactory,
+                                   TruckOrderFeedbackProducer truckOrderFeedbackProducer, InventoryRepository inventoryRepository) {
         super(consumerFactory);
         this.truckOrderFeedbackProducer = truckOrderFeedbackProducer;
+        this.inventoryRepository = inventoryRepository;
     }
 
     @Override
@@ -40,45 +42,48 @@ public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<UU
 
     @Override
     protected void processMessages() {
-        ConsumerRecords<String, UUID> records = pollRecords(Optional.empty());
-        for (ConsumerRecord<String, UUID> record : records) {
+        ConsumerRecords<String, Object> records = pollRecords();
+        for (ConsumerRecord<String, Object> record : records) {
             processRecord(record);
         }
     }
 
-    private void processRecord(ConsumerRecord<String, UUID> record) {
-        UUID message = record.value();
-        boolean isValid = validateRecord(String.valueOf(message));
+    private void processRecord(ConsumerRecord<String, Object> record) {
+        PlaceOrder order = (PlaceOrder) record.value();
 
-        if(isValid) {
+        if(inventoryAvailable(order.getQuantity())) {
             OrderFeedback feedback = new OrderFeedback();
-            feedback.setOrderId(message);
+            feedback.setOrderId(order.getOrderId());
             feedback.setStatus(OrderStatus.PROCESSING);
 
-            // Send initial feedback
             truckOrderFeedbackProducer.sendFeedback(feedback);
-            performAdditionalProcessing(message);
+            processOrder(order);
 
             feedback.setStatus(OrderStatus.FINISHED);
-            // Send feedback again after processing
             truckOrderFeedbackProducer.sendFeedback(feedback);
 
             commitOffsets();
         }
     }
 
-    private boolean validateRecord(String message) {
-        // Implement your validation logic here
-        return true; // For demonstration purposes, always return true
+    private boolean inventoryAvailable(Integer required) {
+        Inventory inventory = inventoryRepository.findOneByType(VehicleType.TRUCK);
+        return inventory.getQuantity() >= required;
     }
 
-    private void performAdditionalProcessing(UUID message) {
-        // Implement additional processing logic here
-        // For demonstration purposes, let's say we log the processing of the record
-        System.out.println("Processing record: " + message);
+    private void processOrder(PlaceOrder order) {
+        try {
+            Thread.sleep(getRandomWaitTime());
+            Inventory inventory = inventoryRepository.findOneByType(VehicleType.TRUCK);
+            inventory.setQuantity(inventory.getQuantity()-order.getQuantity());
+            inventoryRepository.save(inventory);
+        } catch (InterruptedException e) {
+            System.out.println("Thread sleep interrupted");
+        }
+        System.out.println("Processing record: " + order.getOrderId());
     }
 
-    private String getFeedbackTopicName() {
-        return "car-order-feedback-topic";
+    public static Long getRandomWaitTime() {
+        return (long) (RANDOM.nextInt((6)) + 5) * 1000;
     }
 }

@@ -21,22 +21,22 @@ import java.util.UUID;
 @Configuration
 public class KafkaConfig {
 
-    @Value("${kafka.bootstrap-servers}")
+    @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${kafka.max-poll-records}")
+    @Value("${spring.kafka.max-poll-records}")
     private String maxPollRecords;
 
-    @Value("${kafka.topic.process-truck-orders}")
+    @Value("${spring.kafka.topic.process-truck-orders}")
     private String processTruckOrdersTopic;
 
-    @Value("${kafka.topic.process-car-orders}")
+    @Value("${spring.kafka.topic.process-car-orders}")
     private String processCarOrdersTopic;
 
-    @Value("${kafka.consumer.car-orders-fb.group-id}")
+    @Value("${spring.kafka.consumer.car-orders-fb.group-id}")
     private String carFBGroupId;
 
-    @Value("${kafka.consumer.car-orders-fb.group-id}")
+    @Value("${spring.kafka.consumer.car-orders-fb.group-id}")
     private String truckFBGroupId;
 
     private static final short DEFAULT_REPLICATION_FACTOR = 1;
@@ -57,11 +57,11 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, UUID> uuidKafkaTemplate() {
+    public KafkaTemplate<String, Object> uuidKafkaTemplate() {
         Map<String, Object> producerConfigs = new HashMap<>();
         producerConfigs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         producerConfigs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        producerConfigs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class);
+        producerConfigs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs));
     }
 
