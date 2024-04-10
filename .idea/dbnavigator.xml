@@ -6,7 +6,7 @@
   </component>
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
@@ -17,16 +17,22 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="39326d1d-1375-4769-b8cd-6b66f2af5918">
-      <console name="Connection" type="STANDARD" schema="public" session="Main"><![CDATA[select * from orders o;]]></console>
+      <console name="Connection" type="STANDARD" schema="public" session="Main"><![CDATA[-- insert into inventory values ('CAR','2232df75-4549-4e66-84a9-e93120b71db5',10);
+-- insert into inventory values ('TRUCK','2232df75-4549-4e66-84a9-e93120b71db4',10);
+
+update inventory set quantity = 15 where type = 'TRUCK';
+update inventory set quantity = 20 where type = 'CAR';
+
+
+select * from orders o;
+select * from inventory i;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="39326d1d-1375-4769-b8cd-6b66f2af5918" object-ref="consoles/Connection" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="39326d1d-1375-4769-b8cd-6b66f2af5918" />
