@@ -6,6 +6,7 @@
 		<groupId>com.ing.assignment</groupId>
 		<artifactId>parent-project</artifactId>
 		<version>1.0.0</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>orderprocessor</artifactId>
@@ -62,6 +63,17 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>3.2.4</version>
+				<configuration>
+					<mainClass>com.ing.assignment.orderprocessor.OrderProcessorApplication</mainClass>
+					<layout>JAR</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

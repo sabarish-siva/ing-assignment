@@ -40,6 +40,28 @@ services:
     networks:
       - ing-network
 
+  ordermanager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ordermanager_image
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka
+      - postgres
+
+  orderprocessor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: orderprocessor_image
+    ports:
+      - "8081:8081"
+    depends_on:
+      - kafka
+      - postgres
+
 networks:
   ing-network:
     driver: bridge

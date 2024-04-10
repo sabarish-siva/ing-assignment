@@ -7,8 +7,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>order-common</module>
-        <module>order-manager</module>
-        <module>order-processor</module>
+        <module>ordercommon</module>
+        <module>ordermanager</module>
+        <module>orderprocessor</module>
     </modules>
 </project>
