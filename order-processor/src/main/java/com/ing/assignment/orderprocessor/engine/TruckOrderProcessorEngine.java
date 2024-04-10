@@ -5,7 +5,7 @@ import com.ing.assignment.ordercommon.dto.PlaceOrder;
 import com.ing.assignment.ordercommon.model.OrderStatus;
 import com.ing.assignment.ordercommon.model.VehicleType;
 import com.ing.assignment.ordercommon.utils.kafka.consumer.AbstractScheduledKafkaConsumer;
-import com.ing.assignment.orderprocessor.model.Inventory;
+import com.ing.assignment.orderprocessor.model.InventoryDetail;
 import com.ing.assignment.orderprocessor.repository.InventoryRepository;
 import com.ing.assignment.orderprocessor.utils.TruckOrderFeedbackProducer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -67,16 +67,16 @@ public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Ob
     }
 
     private boolean inventoryAvailable(Integer required) {
-        Inventory inventory = inventoryRepository.findOneByType(VehicleType.TRUCK);
-        return inventory.getQuantity() >= required;
+        InventoryDetail inventoryDetail = inventoryRepository.findOneByType(VehicleType.TRUCK);
+        return inventoryDetail.getQuantity() >= required;
     }
 
     private void processOrder(PlaceOrder order) {
         try {
             Thread.sleep(getRandomWaitTime());
-            Inventory inventory = inventoryRepository.findOneByType(VehicleType.TRUCK);
-            inventory.setQuantity(inventory.getQuantity()-order.getQuantity());
-            inventoryRepository.save(inventory);
+            InventoryDetail inventoryDetail = inventoryRepository.findOneByType(VehicleType.TRUCK);
+            inventoryDetail.setQuantity(inventoryDetail.getQuantity()-order.getQuantity());
+            inventoryRepository.save(inventoryDetail);
         } catch (InterruptedException e) {
             System.out.println("Thread sleep interrupted");
         }

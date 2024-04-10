@@ -1,8 +1,10 @@
 D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\engine\CarOrderProcessorEngine.java
+D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\model\InventoryDetail.java
 D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\repository\InventoryRepository.java
 D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\OrderProcessorApplication.java
 D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\utils\CarOrderFeedbackProducer.java
 D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\config\KafkaConfig.java
+D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\service\InventoryService.java
 D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\engine\TruckOrderProcessorEngine.java
-D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\model\Inventory.java
 D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\utils\TruckOrderFeedbackProducer.java
+D:\Git\ing\ing-assignment\order-processor\src\main\java\com\ing\assignment\orderprocessor\controller\InventoryController.java
