@@ -8,6 +8,7 @@ import com.ing.assignment.ordercommon.utils.kafka.consumer.AbstractScheduledKafk
 import com.ing.assignment.orderprocessor.model.InventoryDetail;
 import com.ing.assignment.orderprocessor.repository.InventoryRepository;
 import com.ing.assignment.orderprocessor.utils.CarOrderFeedbackProducer;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.TopicPartition;
@@ -25,6 +26,7 @@ import java.util.Random;
  * {@link ConsumerFactory} bean can be found at {@link com.ing.assignment.orderprocessor.config.KafkaConfig} file.
  */
 @Component
+@Slf4j
 public class CarOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Object> {
 
     private final CarOrderFeedbackProducer carOrderFeedbackProducer;
@@ -62,11 +64,14 @@ public class CarOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Obje
         if(inventoryAvailable(order.getQuantity())) {
             OrderFeedback feedback = new OrderFeedback();
             feedback.setOrderId(order.getOrderId());
-            feedback.setStatus(OrderStatus.PROCESSING);
 
+            log.debug("Sending initial feedback for order: " + order.getOrderId());
+            feedback.setStatus(OrderStatus.PROCESSING);
             carOrderFeedbackProducer.sendFeedback(feedback);
+
             processOrder(order);
 
+            log.debug("Sending final feedback for order: " + order.getOrderId());
             feedback.setStatus(OrderStatus.FINISHED);
             carOrderFeedbackProducer.sendFeedback(feedback);
 
@@ -78,6 +83,7 @@ public class CarOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Obje
             is some kind of soft commit or something of that sort (which I dont know for sure).
             Hence, using a workaround for now to maintain offset when the record is not processed.
              */
+            log.debug("Inventory not adequate. Not processing order: " + order.getOrderId());
             kafkaConsumer.seek(new TopicPartition(record.topic(),record.partition()),record.offset());
         }
     }
@@ -96,7 +102,7 @@ public class CarOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Obje
         } catch (InterruptedException e) {
             System.out.println("Thread sleep interrupted");
         }
-        System.out.println("Processing record: " + order.getOrderId());
+        log.info("Finished processing order: " + order.getOrderId());
     }
 
     public static Long getRandomWaitTime() {

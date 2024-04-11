@@ -1,5 +1,6 @@
 package com.ing.assignment.ordercommon.utils.kafka.producer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * {@link #sendMessage(Object)} to send messages of type {@link T} to the kafka topic.
  * Use {@link #sendMessages(List)} to send batch records.
  */
+@Slf4j
 public abstract class AbstractKafkaProducer<T> {
 
     protected final KafkaTemplate<String, T> kafkaTemplate;
@@ -21,10 +23,12 @@ public abstract class AbstractKafkaProducer<T> {
     protected abstract String getTopicName();
 
     protected void sendMessage(T message) {
+        log.debug("Writing to kafka topic : "+ getTopicName());
         kafkaTemplate.send(getTopicName(), message);
     }
 
     protected void sendMessages(List<T> messages) {
+        log.debug("Writing to kafka topic : "+ getTopicName());
         messages.forEach(message -> kafkaTemplate.send(getTopicName(), message));
     }
 }

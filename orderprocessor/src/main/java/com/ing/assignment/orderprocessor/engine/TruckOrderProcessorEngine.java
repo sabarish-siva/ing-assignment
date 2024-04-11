@@ -8,6 +8,7 @@ import com.ing.assignment.ordercommon.utils.kafka.consumer.AbstractScheduledKafk
 import com.ing.assignment.orderprocessor.model.InventoryDetail;
 import com.ing.assignment.orderprocessor.repository.InventoryRepository;
 import com.ing.assignment.orderprocessor.utils.TruckOrderFeedbackProducer;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.TopicPartition;
@@ -25,6 +26,7 @@ import java.util.Random;
  * {@link ConsumerFactory} bean can be found at {@link com.ing.assignment.orderprocessor.config.KafkaConfig} file.
  */
 @Component
+@Slf4j
 public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Object> {
 
     private final TruckOrderFeedbackProducer truckOrderFeedbackProducer;
@@ -62,16 +64,20 @@ public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Ob
         if(inventoryAvailable(order.getQuantity())) {
             OrderFeedback feedback = new OrderFeedback();
             feedback.setOrderId(order.getOrderId());
-            feedback.setStatus(OrderStatus.PROCESSING);
 
+            log.debug("Sending initial feedback for order: " + order.getOrderId());
+            feedback.setStatus(OrderStatus.PROCESSING);
             truckOrderFeedbackProducer.sendFeedback(feedback);
+
             processOrder(order);
 
+            log.debug("Sending final feedback for order: " + order.getOrderId());
             feedback.setStatus(OrderStatus.FINISHED);
             truckOrderFeedbackProducer.sendFeedback(feedback);
 
             commitOffsets();
         } else {
+            log.debug("Inventory not adequate. Not processing order: " + order.getOrderId());
             kafkaConsumer.seek(new TopicPartition(record.topic(),record.partition()),record.offset());
         }
     }
@@ -88,9 +94,9 @@ public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Ob
             inventoryDetail.setQuantity(inventoryDetail.getQuantity()-order.getQuantity());
             inventoryRepository.save(inventoryDetail);
         } catch (InterruptedException e) {
-            System.out.println("Thread sleep interrupted");
+            log.warn("Thread sleep interrupted");
         }
-        System.out.println("Processing record: " + order.getOrderId());
+        log.info("Finished processing order: " + order.getOrderId());
     }
 
     public static Long getRandomWaitTime() {

@@ -1,5 +1,6 @@
 package com.ing.assignment.ordercommon.utils.kafka.consumer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -14,6 +15,7 @@ import java.util.Collections;
  * doesn't have auto commit. Use {@link #pollRecords()} to get records individually and call
  * {@link #commitOffsets()} to sync the offsets.
  **/
+@Slf4j
 public abstract class AbstractKafkaConsumer<T> {
 
     protected final KafkaConsumer<String, T> kafkaConsumer;
@@ -31,11 +33,14 @@ public abstract class AbstractKafkaConsumer<T> {
      * commit the call as auto commit is disabled.
      */
     protected ConsumerRecords<String, T> pollRecords() {
+        log.debug("polling from topic" + getTopicName());
         return kafkaConsumer.poll(Duration.ofMillis(DEFAULT_POLL_TIME));
     }
 
     protected void commitOffsets() {
+        log.debug("committing offsets..");
         kafkaConsumer.commitSync();
+        log.debug("commit successful");
     }
 }
 

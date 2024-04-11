@@ -4,6 +4,7 @@ import com.ing.assignment.ordercommon.dto.OrderFeedback;
 import com.ing.assignment.ordercommon.utils.kafka.consumer.AbstractScheduledKafkaConsumer;
 import com.ing.assignment.ordermanager.model.OrderDetail;
 import com.ing.assignment.ordermanager.repository.OrderDetailsRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +21,7 @@ import java.util.Optional;
  * for carFBConsumerFactory can be found at {@link com.ing.assignment.ordermanager.config.KafkaConfig} file.
  */
 @Component
+@Slf4j
 public class CarOrderFBConsumer extends AbstractScheduledKafkaConsumer<Object> {
 
     private final OrderDetailsRepository orderDetailsRepository;
@@ -50,7 +52,6 @@ public class CarOrderFBConsumer extends AbstractScheduledKafkaConsumer<Object> {
 
     private void processRecord(ConsumerRecord<String, Object> record) {
         OrderFeedback feedback = (OrderFeedback) record.value();
-
         processOrder(feedback);
         commitOffsets();
     }
@@ -61,6 +62,7 @@ public class CarOrderFBConsumer extends AbstractScheduledKafkaConsumer<Object> {
             OrderDetail orderDetail = optionalOrder.get();
             orderDetail.setStatus(feedback.getStatus());
             orderDetailsRepository.save(orderDetail);
+            log.debug("Order status updated for "+ orderDetail.getId());
         }
     }
 }
