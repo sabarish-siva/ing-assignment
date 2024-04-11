@@ -78,7 +78,7 @@ public class TruckOrderProcessorEngine extends AbstractScheduledKafkaConsumer<Ob
 
     private boolean inventoryAvailable(Integer required) {
         InventoryDetail inventoryDetail = inventoryRepository.findOneByType(VehicleType.TRUCK);
-        return inventoryDetail.getQuantity() >= required;
+        return inventoryDetail != null && inventoryDetail.getQuantity() >= required;
     }
 
     private void processOrder(PlaceOrder order) {
